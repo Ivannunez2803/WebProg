@@ -1,155 +1,101 @@
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu Example</title>
-Expand
-index.html
-4 KB
-﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menu Example</title>
-<link rel="stylesheet" href="style.css">
-<style>
-    .main{
-box-sizing: border-box;
-}
-
-body {
-font-family: Helvetica, Arial, sans-serif;
-margin: 0;
-padding: 0;
-background-color: rgb(220, 250, 230);
-}
-
-nav {
-background-color: rgb(39, 156, 64);
-display: flex;
-flex-direction: row;
-}
-
-nav > div:hover, nav > div:focus-within {
-background-color: rgb(39, 196, 64);
-position: relative;
-}
-
-h2, label {
-display: block;
-margin: 0;
-padding: 5px 10px;
-min-width: 100px;
-font-size: large;
-}
-
-nav > div > div {
-display: none;
-flex-direction: column;
-position: absolute;
-background-color: rgb(39, 196, 64);
-width: 100%;
-}
-
-nav > div:hover > div, nav > div:focus-within > div {
-display: flex;
-}
-
-nav a {
-display: block;
-padding: 5px 10px;
-text-decoration: none;
-}
-
-nav a:hover {
-background-color: rgb(39, 255, 64);
-}
-
-nav input {
-position: absolute;
-top: -1000px;
-}
-
-.container {
-max-width: 1231px;
-margin: 0 auto;
-}
-
-h3 {
-margin: 0;
-}
-
-.alert {
-background-color: rgb(255, 255, 255);
-border-left: 5px solid rgb(39, 196, 64);
-padding: 15px;
-margin: 25px;
-}
-
-.yellow {
-border-color: rgb(245, 245, 80);
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .bg-white {
+            background-color: whitesmoke;
+        }
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .todo-item.completed {
+            text-decoration: line-through;
+            color: gray;
+        }
+    </style>
 </head>
 <body>
-<nav>
-    <div>
-        <h2>File</h2>
-        <div>
-            <a href="">New</a>
-            <a href="">Open</a>
-            <a href="">Save</a>
-            <a href="">Print</a>
-            <a href="">Close</a>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="https://bulma.io">
+                <strong>To-Do List</strong>
+            </a>
         </div>
     </div>
-
-    <div>
-        <label>
-            <input>
-            Edit
-        </label>
-        <div>
-            <a href="">Undo</a>
-            <a href="">Redo</a>
-            <a href="">Cut</a>
-            <a href="">Copy</a>
-            <a href="">Paste</a>
-            <a href="">Delete</a>
-            <a href="">Select All</a>
-        </div>
-    </div>
-
-    <div>
-        <h2>View</h2>
-        <div>
-            <a href="">Zoom In</a>
-            <a href="">Zoom Out</a>
-            <a href="">Actual Size</a>
-            <a href="">Fit Page</a>
-            <a href="">Fit Width</a>
-            <a href="">Fit Height</a>
-            <a href="">Rotate Left</a>
-            <a href="">Rotate Right</a>
-            <a href="">Full Screen</a>
-        </div>
-    </div>
-
 </nav>
 
-<div class="container">
+<div class="hero is-info">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">
+                <i class="fa-solid fa-calendar"></i>
+                My To-Do List
+            </h1>
 
-    <div class="alert">
-        <h3>Instructions</h3>
-        <p>Recreate this page using <b><i>only CSS</i></b>. Do yourself a favor and 1) Do not view the source. Figure it out yourself. 2) Do not search for the solution. Learn CSS until you know enough to do this.</p>
+            <div class="field">
+                <div class="control">
+                    <input v-model="newTask" class="input" type="text" placeholder="Add a new task" @keyup.enter="addTask">
+                </div>
+            </div>
+
+            <div class="section bg-white" id="app">
+                <div class="todo-list">
+                    <div class="todo-item" v-for="(task, index) in tasks" :key="index" :class="{ completed: task.completed }">
+                        <span @click="toggleTask(index)">{{ task.text }}</span>
+                        <button class="delete" @click="removeTask(index)"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="alert yellow">
-        <h3>Extra Credit</h3>
-        <p>Notice how the Edit menu (besides for not being bold) reacts to clicks. If you click the edit menu, it remains open until you click somewhere else. (This you might need to search for)</p>
-    </div>
-
 </div>
 
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script>
+    const { createApp, ref } = Vue
+
+    createApp({
+        setup() {
+            const newTask = ref('');
+            const tasks = ref([]);
+
+            function addTask() {
+                if (newTask.value.trim() !== '') {
+                    tasks.value.push({ text: newTask.value, completed: false });
+                    newTask.value = ''; // Clear the input field
+                }
+            }
+
+            function toggleTask(index) {
+                tasks.value[index].completed = !tasks.value[index].completed;
+            }
+
+            function removeTask(index) {
+                tasks.value.splice(index, 1);
+            }
+
+            return {
+                newTask,
+                tasks,
+                addTask,
+                toggleTask,
+                removeTask
+            }
+        }
+    }).mount('#app')
+</script>
 </body>
 </html>
