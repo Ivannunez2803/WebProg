@@ -31,7 +31,7 @@
           font-size: 1.25rem;
           font-weight: bold;
         }
-        .shelf .price {
+        .shelf .minutes {
           text-align: right;
           font-size: 1rem;
           color: #666;
@@ -116,12 +116,12 @@
     <div class="container">
         <h1 class="title">
             <i class="fa-solid fa-calendar"></i>
-            My Bulma Example
+            To-Do List
         </h1>
 
         <ul class="list">
-            <li class="item">Something</li>
-            <li class="item">Something else</li>
+            <li class="item">Ivan Nunez</li>
+            <li class="item">Assignment 3</li>
             <li class="item"></li>
             <li class="item"></li>
             <li class="item"></li>
@@ -137,9 +137,9 @@
             <div class="column is-three-quarters">
               {{ message }}
               <ul class="shelf">
-                <li v-for="product in products" @click="addToCart(product)">
+                <li v-for="product in tasks" @click="addToCalendar(product)">
                   <h3>{{ product.name }}</h3>
-                  <p class="price">${{ product.price }}</p>
+                  <p class="minutes">{{ product.minutes }} Minutes</p>
                 </li>
               </ul>
             </div>
@@ -147,24 +147,24 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Price</th>
+                    <th>Task</th>
+                    <th>Duration</th>
                     <th>Quantity</th>
                     <th>Total</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in cart">
+                  <tr v-for="item in calendar">
                     <td>{{ item.product.name }}</td>
-                    <td>${{ item.product.price }}</td>
+                    <td>{{ item.product.minutes }} Minutes</td>
                     <td>{{ item.quantity }}</td>
-                    <td>${{ item.product.price * item.quantity }}</td>
+                    <td>{{ item.product.minutes * item.quantity }} Minutes</td>
                   </tr>
                 </tbody>
                 <tfoot>
                   <tr>
                     <td colspan="3">Total</td>
-                    <td>${{ cart.reduce((total, item) => total + item.product.price * item.quantity, 0) }}</td>
+                    <td>{{ calendar.reduce((total, item) => total + item.product.minutes * item.quantity, 0) / 60}} Hours</td>
                   </tr>
                 </tfoot>
               </table>
@@ -183,32 +183,32 @@
     setup() {
       const message = ref('Hello vue!')
 
-      const products = ref([
-        { name: 'Pizza', price: 5.50 },
-        { name: 'Burger', price: 6.99 },
-        { name: 'Coke', price: 2.15 },
-        { name: 'Fries', price: 3.25 },
-        { name: 'Salad', price: 4.75 },
-        { name: 'Ice Cream', price: 2.99 },
-        { name: 'Coffee', price: 1.99 },
-        { name: 'Tea', price: 1.50 },
-        { name: 'Water', price: 1.00 },
-        { name: 'Juice', price: 2.25 }
+      const tasks = ref([
+        { name: 'Meal Prep', minutes: 180 },
+        { name: 'Laundry', minutes: 120 },
+        { name: 'Study WP', minutes: 120 },
+        { name: 'Study OOP', minutes: 120 },
+        { name: 'Break', minutes: 30 },
+        { name: 'Call Mom', minutes: 45 },
+        { name: 'Get Coffee', minutes: 45 },
+        { name: 'OfficeHours', minutes: 75 },
+        { name: 'Class', minutes: 75 },
+        { name: 'Lunch', minutes: 30 }
       ])
 
-      const cart = ref([])
+      const calendar = ref([])
 
-      function addToCart(product) {
-        const item = cart.value.find(item => item.product.name === product.name)
+      function addToCalendar(product) {
+        const item = calendar.value.find(item => item.product.name === product.name)
         if(item) {
           item.quantity++
         } else {
-          cart.value.push({ product, quantity: 1 })
+          calendar.value.push({ product, quantity: 1 })
         }
       }
 
       return {
-        message, products, cart, addToCart
+        message, tasks, calendar, addToCalendar
       }
     }
   }).mount('#app')
